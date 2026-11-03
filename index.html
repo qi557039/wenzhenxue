@@ -1181,13 +1181,18 @@ fog.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 
 /* ================= 音乐：时空储蓄罐随机五首 ================= */
 const ALLTRACKS=['audio/1.mp3','audio/2.mp3','audio/3.mp3','audio/4.mp3','audio/5.mp3','audio/6.mp3','audio/7.mp3'];
-const playlist=ALLTRACKS.slice().sort(()=>Math.random()-.5).slice(0,5);
+const playlist=ALLTRACKS.slice(); /*固定顺序，避免刷新换歌的串台感*/
 let trackIdx=0;
 const bgm=new Audio();
 bgm.volume=.55;
 bgm.src=playlist[0];
 window.__bgm=bgm;window.__playlist=playlist;
-bgm.addEventListener('ended',()=>{trackIdx=(trackIdx+1)%playlist.length;bgm.src=playlist[trackIdx];bgm.play().catch(()=>{})});
+bgm.addEventListener('ended',()=>{
+  /* 超短曲目（如致爱丽丝片段）连播两遍再切下一首，避免频繁跳歌的串台感 */
+  if(bgm.duration&&bgm.duration<45&&bgm.dataset.rep!=='1'){bgm.dataset.rep='1';bgm.currentTime=0;bgm.play().catch(()=>{});return}
+  bgm.dataset.rep='0';
+  trackIdx=(trackIdx+1)%playlist.length;bgm.src=playlist[trackIdx];bgm.play().catch(()=>{})
+});
 function startMusic(){
   bgm.play().catch(()=>{
     const retry=()=>{bgm.play().catch(()=>{});removeEventListener('touchstart',retry);removeEventListener('pointerdown',retry)};
