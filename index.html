@@ -1204,6 +1204,7 @@ try{
   if(sessionStorage.getItem('wxz_in_v1')){
     document.body.classList.add('resumed');
     fogClear();
+    clearFired=true;   /* 跳过擦雾流程，但标记为已完成，保证封面按钮可点 */
     document.body.classList.add('at0');
     entered=true;
   }else{
@@ -1222,7 +1223,8 @@ function placeTapzone(){
 placeTapzone();addEventListener('resize',placeTapzone);
 tapzone.addEventListener('click',e=>{
   e.stopPropagation();
-  if(!clearFired){
+  /* 快速恢复（从文档返回，跳过擦雾）时 clearFired 不会置位，直接放行 */
+  if(!clearFired && !document.body.classList.contains('resumed')){
     // 未擦到 50%：按钮半掩，提示继续擦
     return;
   }
@@ -1298,6 +1300,9 @@ addEventListener('pageshow',e=>{if(e.persisted)bgmWakeResume()});
 /* 切走瞬间把「想播」意图写进存档，避免被随后的自动暂停覆盖 */
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&bgmWant)bgmSave()});
 addEventListener('pagehide',()=>{if(bgmWant)bgmSave()});
+/* 返回页面后首次触控兜底：浏览器拦截过自动播放时，任何一次触控都会拉起音乐（常驻，不一次性） */
+addEventListener('pointerdown',()=>{if(bgmWant&&bgm.paused)startMusic()},{passive:true});
+addEventListener('touchstart',()=>{if(bgmWant&&bgm.paused)startMusic()},{passive:true});
 /* 页面重新加载（从文档返回）时自动接续播放 */
 bgmRestore();
 /* 音波指示条 */
