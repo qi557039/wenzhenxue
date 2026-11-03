@@ -109,15 +109,15 @@ body.bwd .page.on{transform:none;filter:blur(0);transition:opacity .28s ease}
 /* ---------- 通用页：永生花式线条排版 ---------- */
 .page{padding:38px 36px 86px;justify-content:flex-start;align-items:stretch}
 #p0{justify-content:center;align-items:center;text-align:center;padding:30px 26px 150px}
-.hd{display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:.32em;color:rgba(224,238,251,.82);text-transform:uppercase;position:relative;z-index:1;}
+.hd{display:flex;justify-content:space-between;font-size:8.5px;letter-spacing:.3em;color:#dbe9f8;text-transform:uppercase;position:relative;z-index:1;}
 .title{margin-top:26px;position:relative;z-index:1}
-.title .no{font-size:9.5px;letter-spacing:.38em;color:rgba(219,233,248,.9);position:relative;z-index:1}
+.title .no{font-size:9px;letter-spacing:.34em;color:#dbe9f8;position:relative;z-index:1}
 .hd{margin-bottom:0}
-.title h2{display:block;font-weight:300;font-size:28px;letter-spacing:.26em;margin-top:10px;color:#ffffff;text-shadow:0 1px 18px rgba(120,180,240,.28);}
+.title h2{display:block;font-weight:300;font-size:26px;letter-spacing:.28em;margin-top:8px;color:#ffffff;}
 .title h2 em{font-family:"Cormorant Garamond",serif;font-style:normal;font-size:9px;letter-spacing:.3em;color:#c9dff5;margin-left:14px;vertical-align:middle}
 /* 须知页「· 一 / · 二」：更大、位置略上移 */
 #p3 .title h2 em,#p3b .title h2 em{font-size:20px;letter-spacing:.2em;color:#e6f2ff;margin-left:14px;vertical-align:baseline;position:relative;top:0}
-.title .en{font-size:9px;letter-spacing:.34em;color:rgba(201,223,245,.88);margin-top:8px;text-transform:uppercase;}
+.title .en{font-size:8.5px;letter-spacing:.3em;color:#c9dff5;margin-top:6px;text-transform:uppercase;}
 .rule-line{height:1px;background:rgba(255,255,255,.6);margin-top:14px;transform-origin:left;transform:scaleX(0);transition:transform 1.7s cubic-bezier(.25,.7,.25,1) .25s}
 .page.on .rule-line{transform:scaleX(1)}
 
@@ -136,11 +136,9 @@ body.bwd .page.on{transform:none;filter:blur(0);transition:opacity .28s ease}
 .page.on .hline:nth-of-type(8)::after{transition-delay:.68s}
 
 .pbody{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:4px}
-.idrow{display:flex;justify-content:space-between;align-items:baseline;padding:17px 2px;transition:background .4s ease}
-.idrow .k{font-size:9px;letter-spacing:.3em;color:rgba(219,233,248,.86);text-transform:uppercase;}
-.idrow .v{font-size:13.5px;color:#ffffff;letter-spacing:.14em;text-shadow:0 1px 12px rgba(255,255,255,.14);transition:text-shadow .45s ease}
-.idrow:active{background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,0) 70%)}
-.idrow:active .v{text-shadow:0 0 10px rgba(190,230,255,.75),0 0 22px rgba(140,200,255,.35)}
+.idrow{display:flex;justify-content:space-between;align-items:baseline;padding:12px 2px}
+.idrow .k{font-size:8.5px;letter-spacing:.28em;color:#dbe9f8;text-transform:uppercase;}
+.idrow .v{font-size:13.5px;color:#ffffff;letter-spacing:.14em;}
 /* ---------- 须知页：横杠右下角署名小字 ---------- */
 .nt-sig{text-align:right;font-size:10.5px;letter-spacing:.24em;color:rgba(255,255,255,.85);
   font-family:"Cormorant Garamond",serif;margin-top:10px;margin-bottom:2px;padding-right:2px;
@@ -274,16 +272,7 @@ body.at0 #pager,body.at0 #hint,body.at0 #muc{opacity:0;pointer-events:none}
 #p1 .title{margin-top:14px}
 #p1 .pbody{justify-content:flex-start;margin-top:0}
 #p1 .rule-line{margin-bottom:52px}
-#p1 .wording{margin-top:48px;padding-top:0}
-/* 底部收尾装饰：细线 + 小雪花 + 细线，填充下半页留白并形成呼吸收束 */
-.foot-orn{display:flex;align-items:center;gap:14px;margin-top:auto;padding:56px 0 10px;opacity:1}
-.foot-orn .fl{flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6))}
-.foot-orn .fl:last-child{background:linear-gradient(90deg,rgba(255,255,255,.6),rgba(255,255,255,0))}
-.foot-orn i{font-style:normal;font-size:11px;line-height:1;color:rgba(255,255,255,.9);
-  text-shadow:0 0 6px rgba(255,255,255,.5);
-  font-family:"Segoe UI Symbol","Apple Symbols","DejaVu Sans",sans-serif;font-variant-emoji:text;
-  animation:ornFloat 3.6s ease-in-out infinite}
-@keyframes ornFloat{0%,100%{transform:translateY(0) rotate(0deg);opacity:.65}50%{transform:translateY(-4px) rotate(12deg);opacity:1}}
+#p1 .wording{margin-top:52px;padding-top:0}
 
 /* 返回上一页：全套复用「返回封面」的模糊上浮动画（作用于目标页所有内容） */
 .page.bwIn>*{animation:retBlurSoft 1.05s cubic-bezier(.22,.75,.3,1) forwards!important;opacity:0}
@@ -357,16 +346,6 @@ body.at0 #pager,body.at0 #hint,body.at0 #muc{opacity:0;pointer-events:none}
 /* 出场：整页快速淡出 + 子元素下沉 */
 .page.off:not(#p0) .hd,.page.off:not(#p0) .title{opacity:0;transform:translateY(-10px);filter:blur(5px);transition:opacity .2s ease,transform .2s ease,filter .2s ease}
 .page.off:not(#p0) .pbody>*{opacity:0;transform:translateY(-14px);filter:blur(5px);transition:opacity .2s ease,transform .2s ease,filter .2s ease}
-/* —— 会话内入场动画只播一次：本会话已看过的页面瞬时呈现，退出网站重进才重置 —— */
-.page.noentr.on:not(#p0) .hd,.page.noentr.on:not(#p0) .title,.page.noentr.on:not(#p0) .pbody>*{transition:none!important;opacity:1!important;transform:none!important;filter:none!important}
-.page.noentr.on:not(#p0) .rule-line,.page.noentr.on:not(#p0) .hline::after,.page.noentr.on:not(#p0) .wording .wen::after{transition:none!important;opacity:1!important;transform:scaleX(1)!important;filter:none!important}
-.page.noentr.on#p5 .pbody>*,.page.noentr.on#p5 .hd,.page.noentr.on#p5 .title{transition:none!important;opacity:1!important;transform:none!important}
-/* —— 同会话重进（刷新/从文档返回）：封面入场也跳过 —— */
-body.resumed #p0 .snowword span{animation:none!important;opacity:1!important;filter:none!important;transform:none!important}
-body.resumed #p0 .sub,body.resumed #p0 .poem{transition:none!important;opacity:1!important;transform:none!important}
-body.resumed #p0 .tap{opacity:1!important;transition:none!important}
-body.resumed #fog{transition:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
-body.resumed #fogtip{display:none!important}
 
 /* ---------- 历史过往：诗句 + 跳转提示 ---------- */
 #p4 .pbody{justify-content:flex-start;margin-top:2px}
@@ -650,34 +629,6 @@ body.modal-open #pager,body.modal-open #muc,body.modal-open #hint{
 #fog.soft{opacity:.35;transition:opacity .6s}
 #tapzone{position:fixed;z-index:60;cursor:pointer}
 @media (max-height:640px){.card{padding:18px 18px}.page{padding-bottom:80px}.rule{font-size:12.5px;line-height:1.9;padding:7px 0}}
-/* —— 小屏（≤360px）防溢出：收窄页边距 + 长英文行缩字 —— */
-@media (max-width:360px){
-  .page{padding-left:26px;padding-right:26px;overflow-x:clip}
-  #p2 .wording .wen{font-size:7.5px;letter-spacing:.07em;max-width:100%}
-  #p2 .wording{white-space:normal}
-  .msg-lead .lead-en{font-size:7.5px;letter-spacing:.1em;white-space:normal;text-align:left}
-}
-/* —— 小屏矮屏（高度≤640px）：留言页整体收紧，避免与底部导航重叠 —— */
-@media (max-height:640px){
-  #p5 .pbody{margin-top:6px!important}
-  .msg-lead{margin-bottom:8px}
-  .msg-lead .lead-en{margin-top:5px}
-  .msg-to{margin-bottom:8px}
-  .msg-area{margin-top:10px;height:60px}
-  .msg-count{margin-top:4px}
-  .msg-btn{margin-top:10px;padding:8px 18px}
-  .msg-head{margin-top:10px}
-  .msg-list{max-height:118px}
-  .msg-nav{margin-top:4px}
-}
-/* ---------- 桌面/平板自适应：居中窄幅画布 + 两侧氛围暗角 ---------- */
-@media (min-width:700px){
-  .page{left:0;right:0;width:100%;max-width:480px;margin:0 auto;padding-left:36px;padding-right:36px}
-  #fog,#tapzone,#fxlayer{max-width:480px;left:0;right:0;margin:0 auto}
-  body::after{content:"";position:fixed;inset:0;z-index:80;pointer-events:none;
-    background:radial-gradient(120% 90% at 50% 50%,transparent 34%,rgba(10,26,48,.42) 100%)}
-  #stage{max-width:480px;left:0;right:0;margin:0 auto}
-}
 </style>
 </head>
 <body class="at0">
@@ -705,14 +656,12 @@ body.modal-open #pager,body.modal-open #muc,body.modal-open #hint{
     <div class="rule-line"></div>
     <div class="pbody">
       <div class="idrow hline"><span class="k">Name</span><span class="v">闻枕雪</span></div>
-      <div class="idrow hline"><span class="k">Gender</span><span class="v">女</span></div>
-      <div class="idrow hline"><span class="k">Age</span><span class="v">19</span></div>
+      <div class="idrow hline"><span class="k">Gender / Age</span><span class="v">女 · 19</span></div>
       <div class="idrow hline"><span class="k">Sign</span><span class="v">射手座</span></div>
       <div class="idrow hline"><span class="k">MBTI</span><span class="v">ENFP</span></div>
       <div class="idrow hline"><span class="k">League</span><span class="v">LE-H</span></div>
       <div class="idrow hline"><span class="k">Permanent</span><span class="v">大羽毛爱神</span></div>
       <div class="wording">你和雪有一个共同点<span class="wen">You and Xue have one thing in common</span></div>
-      <div class="foot-orn" aria-hidden="true"><span class="fl"></span><i>&#10054;</i><span class="fl"></span></div>
     </div>
   </section>
 
@@ -913,7 +862,7 @@ body.modal-open #pager,body.modal-open #muc,body.modal-open #hint{
 <script>
 let clearFired=false;
 /* 版本戳：仅作标记，不做任何整页重载（整页 reload 才是白闪元凶） */
-var V='v20251105-awwwards-r1';
+var V='v20251104-0850';
 try{localStorage.setItem('snow_ver',V)}catch(e){}
 
 /* 历史过往：三朵小雪花，点击白色发光（可多选） */
@@ -1199,17 +1148,6 @@ function fogClear(){
   document.querySelector('#p0 .tap').classList.add('show');
   tip.classList.add('hide');tip.style.animation='none';
 }
-/* —— 同一会话内重进（刷新/从文档返回）：跳过封面擦雾与文字入场，直接可进入 —— */
-try{
-  if(sessionStorage.getItem('wxz_in_v1')){
-    document.body.classList.add('resumed');
-    fogClear();
-    document.body.classList.add('at0');
-    entered=true;
-  }else{
-    sessionStorage.setItem('wxz_in_v1','1');
-  }
-}catch(e){}
 /* —— 进入热区：与「轻触进入」按钮重合，位于雾层之上，保证一定能点 —— */
 const tapzone=document.createElement('div');
 tapzone.id='tapzone';
@@ -1247,40 +1185,13 @@ const playlist=ALLTRACKS.slice(); /*固定顺序，避免刷新换歌的串台�
 let trackIdx=0;
 const bgm=new Audio();
 bgm.volume=.55;
-/* —— 播放进度记忆：跳转链接（新开页/切走）后返回，音乐从上次位置继续，而不是重新播放 —— */
-const BGMBK='wxz_bgm_v1';
-let resumed=false;
-/* 用户播放意图：手动暂停=false；只要用户在播/想播=true（浏览器切页自动暂停不改写它） */
-let bgmWant=false;
-function bgmSave(){
-  try{localStorage.setItem(BGMBK,JSON.stringify({f:bgm.src.split('/').pop(),t:bgm.currentTime||0,p:bgmWant}))}catch(e){}
-}
-function bgmRestore(){
-  if(resumed)return;resumed=true;
-  let s=null;try{s=JSON.parse(localStorage.getItem(BGMBK)||'null')}catch(e){}
-  if(!s||!s.f)return;
-  /* 歌单每次加载随机重排，因此按文件名找回曲目，而不是按索引 */
-  const base=n=>n.split('/').pop();
-  const hit=playlist.find(t=>base(t)===s.f)||ALLTRACKS.find(t=>base(t)===s.f);
-  if(!hit)return;
-  const i=playlist.indexOf(hit);
-  if(i>=0){trackIdx=i}else{trackIdx=0;playlist[0]=hit}
-  bgm.src=playlist[trackIdx];
-  const seek=()=>{try{if(s.t>0&&s.t<bgm.duration-2)bgm.currentTime=s.t}catch(e){}};
-  if(bgm.readyState>=1)seek();else bgm.addEventListener('loadedmetadata',seek,{once:true});
-  if(s.p){startMusic();const _m=document.getElementById('muc');_m&&_m.classList.remove('paused')}
-}
 bgm.src=playlist[0];
 window.__bgm=bgm;window.__playlist=playlist;
-let _svT=0;
-bgm.addEventListener('timeupdate',()=>{const n=Date.now();if(n-_svT>2000){_svT=n;bgmSave()}});
-bgm.addEventListener('pause',bgmSave);
-bgm.addEventListener('play',()=>{bgmWant=true;bgmSave();if(!resumed)bgmRestore()});
 bgm.addEventListener('ended',()=>{
   /* 超短曲目（如致爱丽丝片段）连播两遍再切下一首，避免频繁跳歌的串台感 */
   if(bgm.duration&&bgm.duration<45&&bgm.dataset.rep!=='1'){bgm.dataset.rep='1';bgm.currentTime=0;bgm.play().catch(()=>{});return}
   bgm.dataset.rep='0';
-  trackIdx=(trackIdx+1)%playlist.length;bgm.src=playlist[trackIdx];bgmSave();bgm.play().catch(()=>{})
+  trackIdx=(trackIdx+1)%playlist.length;bgm.src=playlist[trackIdx];bgm.play().catch(()=>{})
 });
 function startMusic(){
   bgm.play().catch(()=>{
@@ -1289,22 +1200,11 @@ function startMusic(){
     addEventListener('pointerdown',retry,{passive:true});
   });
 }
-/* —— 跳转文档页返回：切走时被浏览器自动暂停的音乐，回到页面自动续播 —— */
-function bgmWakeResume(){
-  if(bgmWant&&bgm.paused)startMusic();
-}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')bgmWakeResume()});
-addEventListener('pageshow',e=>{if(e.persisted)bgmWakeResume()});
-/* 切走瞬间把「想播」意图写进存档，避免被随后的自动暂停覆盖 */
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&bgmWant)bgmSave()});
-addEventListener('pagehide',()=>{if(bgmWant)bgmSave()});
-/* 页面重新加载（从文档返回）时自动接续播放 */
-bgmRestore();
 /* 音波指示条 */
 const muc=document.createElement('div');muc.id='muc';
 muc.innerHTML='<span class="ring"></span><span class="ring2"></span><span class="dots"><i></i><i></i><i></i></span><span class="core"></span>';
 document.body.appendChild(muc);
-muc.addEventListener('click',e=>{e.stopPropagation();if(bgm.paused){bgmWant=true;startMusic()}else{bgmWant=false;bgm.pause()}muc.classList.toggle('paused',bgm.paused)});
+muc.addEventListener('click',e=>{e.stopPropagation();bgm.paused?startMusic():bgm.pause();muc.classList.toggle('paused',bgm.paused)});
 bgm.addEventListener('play',()=>muc.classList.remove('paused'));
 bgm.addEventListener('pause',()=>muc.classList.add('paused'));
 
@@ -1338,22 +1238,6 @@ const pager=document.getElementById('pager');
 let cur=0,lock=false;
 const ENTER=true; // 需点「轻触进入」才解锁
 let entered=false;
-/* —— 全局交互监测：记录本会话的点击/滑动/按键/翻页次数，关闭网站（标签页）后自动重置 —— */
-window.__imon=(function(){
-  const K='wxz_imon_v1';
-  let d={taps:0,moves:0,keys:0,pages:0,first:Date.now(),last:0};
-  try{const s=JSON.parse(sessionStorage.getItem(K)||'null');if(s&&s.first)d=s}catch(e){}
-  const save=()=>{try{sessionStorage.setItem(K,JSON.stringify(d))}catch(e){}};
-  addEventListener('pointerdown',()=>{d.taps++;d.last=Date.now();save()},{passive:true,capture:true});
-  addEventListener('touchmove',()=>{d.moves++;if(d.moves%10===0)save()},{passive:true,capture:true});
-  addEventListener('keydown',()=>{d.keys++;d.last=Date.now();save()},{capture:true});
-  return {get data(){return d},page(){d.pages++;d.last=Date.now();save()},save};
-})();
-/* —— 入场动画只播一次：本会话内已看过的页不再重播；退出网站重进才重置 —— */
-const SEEN='wxz_seen_v1';
-let seenSet=new Set();
-try{seenSet=new Set(JSON.parse(sessionStorage.getItem(SEEN)||'[]'))}catch(e){}
-function saveSeen(){try{sessionStorage.setItem(SEEN,JSON.stringify([...seenSet]))}catch(e){}}
 /* 直接用 ❆ 字符（U+2746）作图标 */
 const snowSVG='<span class="sf">&#10054;</span>';
 pages.forEach((_,i)=>{
@@ -1386,11 +1270,6 @@ function go(n){
   lastNav=Date.now();
   lock=true;
   document.body.classList.toggle('bwd',n<cur);
-  /* 已看过的页：跳过入场动画，直接呈现 */
-  const _pel=pages[n];
-  if(n>0&&seenSet.has(n))_pel.classList.add('noentr');
-  else{_pel.classList.remove('noentr');seenSet.add(n);saveSeen()}
-  if(window.__imon)__imon.page();
   pages[cur].classList.remove('on');pages[cur].classList.add('off');
   pages[n].classList.add('on');pages[n].classList.remove('off');
   pager.children[n].classList.add('on');pager.children[cur].classList.remove('on');
