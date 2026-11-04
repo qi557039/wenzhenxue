@@ -1207,16 +1207,18 @@ function fogClear(){
   document.querySelector('#p0 .tap').classList.add('show');
   tip.classList.add('hide');tip.style.animation='none';
 }
+/* —— 当前会话是否「已进入」：只在用户真正点过封面后写入 wxz_in_v1 —— */
+function sessionEntered(){
+  try{return sessionStorage.getItem('wxz_in_v1')==='1'}catch(e){return false}
+}
 /* —— 同一会话内重进（刷新/从文档返回）：跳过封面擦雾与文字入场，直接可进入 —— */
 try{
-  if(sessionStorage.getItem('wxz_in_v1')){
+  if(sessionEntered()){
     document.body.classList.add('resumed');
     fogClear();
     clearFired=true;   /* 跳过擦雾流程，但标记为已完成，保证封面按钮可点 */
     document.body.classList.add('at0');
     entered=true;
-  }else{
-    sessionStorage.setItem('wxz_in_v1','1');
   }
 }catch(e){}
 /* —— 进入热区：与「轻触进入」按钮重合，位于雾层之上，保证一定能点 —— */
@@ -1252,23 +1254,47 @@ addEventListener('pointerup',()=>{lastPt=null;downPos=null});
 fog.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 
 /* ================= 音乐：时空储蓄罐随机五首 ================= */
-const ALLTRACKS=['audio/1.mp3','audio/2.mp3','audio/3.mp3']; /*三首循环*/ /*六首时空储蓄罐，整单循环*/; /*六首时空储蓄罐，整单循环*/
+const ALLTRACKS=['audio/1.mp3','audio/2.mp3','audio/3.mp3']; /*三首循环*/
 const playlist=ALLTRACKS.slice(); /*固定顺序，避免刷新换歌的串台感*/
 let trackIdx=0;
 const bgm=new Audio();
 bgm.volume=.55;
+/* 进入判定：只有用户真正「轻触进入」过封面，才允许出声（首访未点击前静默） */
+function hasEntered(){
+  try{return sessionStorage.getItem('wxz_in_v1')==='1'}catch(e){return false}
+}
+let allowAudio=hasEntered();
 /* —— 播放进度记忆：跳转链接（新开页/切走）后返回，音乐从上次位置继续，而不是重新播放 —— */
 const BGMBK='wxz_bgm_v1';
 let resumed=false;
+/* 恢复完成前的自动存档一律跳过，否则 2 秒一次的 timeupdate 会把刚写回的进度覆盖成 0 */
+let seekLock=false, seekTarget=0;
 /* 用户播放意图：手动暂停=false；只要用户在播/想播=true（浏览器切页自动暂停不改写它） */
 let bgmWant=false;
 function bgmSave(){
-  try{localStorage.setItem(BGMBK,JSON.stringify({f:bgm.src.split('/').pop(),t:bgm.currentTime||0,p:bgmWant}))}catch(e){}
+  try{
+    const f=bgm.src.split('/').pop();
+    let t=bgm.currentTime||0;
+    /* 同一首歌：若已有更靠后的存档进度，不被 reload/pagehide 瞬间的小值覆盖
+       （刷新会先触发 pagehide，此时 currentTime 尚未 seek，会写成 0~2s） */
+    try{
+      const old=JSON.parse(localStorage.getItem(BGMBK)||'null');
+      if(old&&old.f===f&&old.t>t+3&&!seekLock)t=old.t;
+    }catch(e){}
+    localStorage.setItem(BGMBK,JSON.stringify({f:f,t:t,p:bgmWant}));
+  }catch(e){}
 }
 function bgmRestore(){
   if(resumed)return;resumed=true;
   let s=null;try{s=JSON.parse(localStorage.getItem(BGMBK)||'null')}catch(e){}
   if(!s||!s.f)return;
+  /* 关键：本次会话尚未真正「进入」过页面 → 只还原曲目与进度，绝不出声 */
+  if(!allowAudio){
+    const base0=n=>n.split('/').pop();
+    const hit0=playlist.find(t=>base0(t)===s.f)||ALLTRACKS.find(t=>base0(t)===s.f);
+    if(hit0){const i0=playlist.indexOf(hit0);if(i0>=0)trackIdx=i0;bgm.src=playlist[trackIdx]}
+    return;
+  }
   /* 歌单每次加载随机重排，因此按文件名找回曲目，而不是按索引 */
   const base=n=>n.split('/').pop();
   const hit=playlist.find(t=>base(t)===s.f)||ALLTRACKS.find(t=>base(t)===s.f);
@@ -1276,8 +1302,29 @@ function bgmRestore(){
   const i=playlist.indexOf(hit);
   if(i>=0){trackIdx=i}else{trackIdx=0;playlist[0]=hit}
   bgm.src=playlist[trackIdx];
-  const seek=()=>{try{if(s.t>0&&s.t<bgm.duration-2)bgm.currentTime=s.t}catch(e){}};
-  if(bgm.readyState>=1)seek();else bgm.addEventListener('loadedmetadata',seek,{once:true});
+  seekLock=true;seekTarget=s.t;
+  const seek=()=>{
+    try{
+      if(!(s.t>0)){seekLock=false;return}
+      const d=bgm.duration;
+      if(d&&isFinite(d)&&s.t>=d-2){seekLock=false;return}   /* 已接近结尾：从下一首开始 */
+      bgm.currentTime=s.t;
+    }catch(e){}
+  };
+  /* 元数据未就绪时挂一次性监听；若 src 重设导致 readyState 归零，等 canplay 再补一次 */
+  if(bgm.readyState>=1)seek();
+  else{
+    bgm.addEventListener('loadedmetadata',seek,{once:true});
+    bgm.addEventListener('canplay',()=>{if(s.t>1&&bgm.currentTime<1)seek()},{once:true});
+  }
+  /* 解锁存档：真正定位成功（或 1.2s 超时）后才允许重新写回，避免 0 覆盖进度 */
+  const unlockSave=()=>{
+    bgm.removeEventListener('seeked',unlockSave);
+    if(Math.abs(bgm.currentTime-seekTarget)>1.5&&bgm.readyState>=1){try{bgm.currentTime=seekTarget}catch(e){}}
+    seekLock=false;
+  };
+  bgm.addEventListener('seeked',unlockSave);
+  setTimeout(unlockSave,1200);
   if(s.p){startMusic();const _m=document.getElementById('muc');_m&&_m.classList.remove('paused')}
 }
 bgm.src=playlist[0];
@@ -1287,9 +1334,18 @@ bgm.preload='auto';
 bgm.setAttribute('playsinline','');
 window.__bgm=bgm;window.__playlist=playlist;
 let _svT=0;
-bgm.addEventListener('timeupdate',()=>{const n=Date.now();if(n-_svT>2000){_svT=n;bgmSave()}});
+bgm.addEventListener('timeupdate',()=>{
+  /* 正在恢复进度：此刻的 currentTime 还是 0，绝不能写回存档 */
+  if(seekLock)return;
+  const n=Date.now();if(n-_svT>2000){_svT=n;bgmSave()}
+});
 bgm.addEventListener('pause',bgmSave);
-bgm.addEventListener('play',()=>{bgmWant=true;bgmSave();if(!resumed)bgmRestore()});
+/* 注意顺序：必须先恢复（读到原始存档）再写回，否则这里会把进度覆盖成 0 */
+bgm.addEventListener('play',()=>{
+  bgmWant=true;
+  if(!resumed)bgmRestore();
+  if(!seekLock)bgmSave();
+});
 /* —— 三首循环：ended 为主，timeupdate 兜底（部分移动端内核 ended 不触发或触发后 play 被拒） —— */
 let switching=false;
 function nextTrack(){
@@ -1319,6 +1375,8 @@ bgm.addEventListener('error',()=>{
   setTimeout(()=>{try{bgm.load();bgm.play().catch(()=>{})}catch(e){}},600);
 });
 function startMusic(){
+  /* 用户未「轻触进入」前一律不出声（防止首访自动播放） */
+  if(!allowAudio)return;
   bgm.play().catch(()=>{
     const retry=()=>{bgm.play().catch(()=>{});removeEventListener('touchstart',retry);removeEventListener('pointerdown',retry)};
     addEventListener('touchstart',retry,{passive:true});
@@ -1327,6 +1385,7 @@ function startMusic(){
 }
 /* —— 跳转文档页返回：切走时被浏览器自动暂停的音乐，回到页面自动续播 —— */
 function bgmWakeResume(){
+  if(!allowAudio)return;          /* 未真正进入过 → 不出声 */
   if(bgmWant&&bgm.paused)startMusic();
 }
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')bgmWakeResume()});
@@ -1335,8 +1394,13 @@ addEventListener('pageshow',e=>{if(e.persisted)bgmWakeResume()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&bgmWant)bgmSave()});
 addEventListener('pagehide',()=>{if(bgmWant)bgmSave()});
 /* 返回页面后首次触控兜底：浏览器拦截过自动播放时，任何一次触控都会拉起音乐（常驻，不一次性） */
-addEventListener('pointerdown',()=>{if(bgmWant&&bgm.paused)startMusic()},{passive:true});
-addEventListener('touchstart',()=>{if(bgmWant&&bgm.paused)startMusic()},{passive:true});
+addEventListener('pointerdown',()=>{if(allowAudio&&bgmWant&&bgm.paused)startMusic()},{passive:true});
+addEventListener('touchstart',()=>{if(allowAudio&&bgmWant&&bgm.paused)startMusic()},{passive:true});
+/* 订阅「已进入」：用户真正点击进入后置位，此刻起才允许出声 */
+function markEntered(){
+  allowAudio=true;
+  try{sessionStorage.setItem('wxz_in_v1','1')}catch(e){}
+}
 /* 页面重新加载（从文档返回）时自动接续播放 */
 bgmRestore();
 /* 音波指示条 */
@@ -1429,6 +1493,8 @@ function go(n){
   const _pel=pages[n];
   if(n>0&&seenSet.has(n))_pel.classList.add('noentr');
   else{_pel.classList.remove('noentr');seenSet.add(n);saveSeen()}
+  /* 只要翻到了内部页，就算真正「进入」过，此后允许出声 */
+  if(n>0&&!allowAudio)markEntered();
   if(window.__imon)__imon.page();
   pages[cur].classList.remove('on');pages[cur].classList.add('off');
   pages[n].classList.add('on');pages[n].classList.remove('off');
@@ -1472,6 +1538,7 @@ function go(n){
 function unlock(){
   entered=true;
   window.__entered=true;
+  markEntered();      /* 用户真正点进来了：此后才允许出声 */
   fogClear();
   // 彻底清空雾面与水珠，不留残留
   fx.clearRect(0,0,fc.width,fc.height);
