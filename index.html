@@ -159,7 +159,7 @@ body.bwd .page.on{transform:none;filter:blur(0);transition:opacity .28s ease}
   border-bottom:1px solid rgba(255,255,255,.16);
   transition:color .45s ease,opacity .45s ease}
 /* 只有「点击发灰」的那一行可点 */
-.ntrow.tapable{cursor:pointer}
+.ntrow{cursor:pointer}
 .ntrow.tapable:active{opacity:.72}
 /* 最后一行（冲突约定）：淡蓝色 */
 .ntrow.nt-blue .nttext{color:#5E9CD4}
@@ -175,9 +175,7 @@ body.bwd .page.on{transform:none;filter:blur(0);transition:opacity .28s ease}
 .ntrow[data-on] .ntidx{color:rgba(255,255,255,.62)}
 .ntrow:not([data-on]) .ntidx{color:rgba(226,236,246,.22)}
 /* 从句：留空对齐，字号略小、透明度略低 */
-.ntrow.sub .nttext{font-size:11.5px;color:rgba(255,255,255,.8)}
-.ntrow.sub[data-on] .nttext{color:rgba(255,255,255,.8)}
-.ntrow.sub:not([data-on]) .nttext{color:rgba(226,236,246,.4)}
+.ntrow.sub .nttext{font-size:11.5px}
 /* 结尾句（冲突约定+安抚）：白色收尾 */
 .ntrow.tail .nttext{color:#ffffff}
 .ntrow.tail[data-on] .nttext{color:#ffffff}
@@ -795,16 +793,16 @@ body.modal-open #pager,body.modal-open #muc,body.modal-open #hint{
     <div class="rule-line"></div>
     <div class="nt-sig">雪 · SNOW</div>
     <div class="pbody" id="ntBody">>
-      <div class="ntrow" data-n="1"><span class="nttext">为了彼此更好的体验 请提前说明喜雷</span></div>
-      <div class="ntrow sub"><span class="nttext">若无喜雷我将以即时状态进行调整和探索</span></div>
-      <div class="ntrow sub"><span class="nttext">并拒绝以踩暗雷的方式进行客诉</span></div>
-      <div class="ntrow" data-n="2"><span class="nttext">请勿在单内出现过度抽象/不配合的情况</span></div>
-      <div class="ntrow sub"><span class="nttext">我会视情况决定是否进行下去或按时间收取费用</span></div>
-      <div class="ntrow" data-n="3"><span class="nttext">如在约会途中发现不喜欢</span></div>
-      <div class="ntrow sub"><span class="nttext">30min/5min：60min/10min可以进行退单</span></div>
-      <div class="ntrow" data-n="4"><span class="nttext">单内截图 录屏请提前告知我</span></div>
-      <div class="ntrow sub"><span class="nttext">相互尊重才是爱人的前提</span></div>
-      <div class="ntrow" data-n="5"><span class="nttext">约会期间如有不适 请说“阿闻 我想要一个拥抱”</span></div>
+      <div class="ntrow" data-n="1"" data-on="1"><span class="nttext">为了彼此更好的体验 请提前说明喜雷</span></div>
+      <div class="ntrow sub" data-on="1"><span class="nttext">若无喜雷我将以即时状态进行调整和探索</span></div>
+      <div class="ntrow sub" data-on="1"><span class="nttext">并拒绝以踩暗雷的方式进行客诉</span></div>
+      <div class="ntrow" data-n="2"" data-on="1"><span class="nttext">请勿在单内出现过度抽象/不配合的情况</span></div>
+      <div class="ntrow sub" data-on="1"><span class="nttext">我会视情况决定是否进行下去或按时间收取费用</span></div>
+      <div class="ntrow" data-n="3"" data-on="1"><span class="nttext">如在约会途中发现不喜欢</span></div>
+      <div class="ntrow sub" data-on="1"><span class="nttext">30min/5min：60min/10min可以进行退单</span></div>
+      <div class="ntrow" data-n="4"" data-on="1"><span class="nttext">单内截图 录屏请提前告知我</span></div>
+      <div class="ntrow sub" data-on="1"><span class="nttext">相互尊重才是爱人的前提</span></div>
+      <div class="ntrow" data-n="5"" data-on="1"><span class="nttext">约会期间如有不适 请说“阿闻 我想要一个拥抱”</span></div>
     </div>
   </section>
 
@@ -818,14 +816,14 @@ body.modal-open #pager,body.modal-open #muc,body.modal-open #hint{
     <div class="rule-line"></div>
     <div class="nt-sig">雪 · SNOW</div>
     <div class="pbody" id="ntBody2">>
-      <div class="ntrow" data-n="6"><span class="nttext">个人原因 拒接男板 男板下单默认送</span></div>
-      <div class="ntrow sub"><span class="nttext">仅接待生理与心理均为女性的老板</span></div>
-      <div class="ntrow" data-n="7"><span class="nttext">如涉及客诉问题 我会提供全部截图至团内高管处</span></div>
-      <div class="ntrow sub"><span class="nttext">拒断章取义 恶意截图</span></div>
-      <div class="ntrow" data-n="8"><span class="nttext">码字速度中等 偏需爱人回应 请允许有思考的空间</span></div>
-      <div class="ntrow" data-n="9"><span class="nttext">下单默认恋人关系 非恋人关系请提前说明</span></div>
-      <div class="ntrow" data-n="10"><span class="nttext">拒绝特殊关系旁观 包括但不限于恋人 暗恋对象 暧昧对象 心选 前妻姐等</span></div>
-      <div class="ntrow tapable" data-n="11"><span class="nttext">你的须知＞我的须知</span></div>
+      <div class="ntrow" data-n="6"" data-on="1"><span class="nttext">个人原因 拒接男板 男板下单默认送</span></div>
+      <div class="ntrow sub" data-on="1"><span class="nttext">仅接待生理与心理均为女性的老板</span></div>
+      <div class="ntrow" data-n="7"" data-on="1"><span class="nttext">如涉及客诉问题 我会提供全部截图至团内高管处</span></div>
+      <div class="ntrow sub" data-on="1"><span class="nttext">拒断章取义 恶意截图</span></div>
+      <div class="ntrow" data-n="8"" data-on="1"><span class="nttext">码字速度中等 偏需爱人回应 请允许有思考的空间</span></div>
+      <div class="ntrow" data-n="9"" data-on="1"><span class="nttext">下单默认恋人关系 非恋人关系请提前说明</span></div>
+      <div class="ntrow" data-n="10"" data-on="1"><span class="nttext">拒绝特殊关系旁观 包括但不限于恋人 暗恋对象 暧昧对象 心选 前妻姐等</span></div>
+      <div class="ntrow tapable" data-n="11"" data-on="1"><span class="nttext">你的须知＞我的须知</span></div>
       <div class="ntrow tail" data-on="1"><span class="nttext">请在我们有冲突的地方告知于我 我会做出改变</span></div>
       <div class="ntrow tail" data-on="1"><span class="nttext">我会及时调整状态并进行安抚</span></div>
     </div>
@@ -1471,7 +1469,7 @@ setTimeout(fitNotice,300);
   });
 })();
 /* ================= 须知页：点雪花切换 选中(白)/未选(灰) ================= */
-document.querySelectorAll('#ntBody .ntrow.tapable, #ntBody2 .ntrow.tapable').forEach(row=>{
+document.querySelectorAll('#ntBody .ntrow, #ntBody2 .ntrow').forEach(row=>{
   row.addEventListener('click',e=>{
     e.stopPropagation();
     const on=row.hasAttribute('data-on');
