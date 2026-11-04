@@ -1180,7 +1180,7 @@ addEventListener('pointerup',()=>{lastPt=null;downPos=null});
 fog.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
 
 /* ================= 音乐：时空储蓄罐随机五首 ================= */
-const ALLTRACKS=['audio/1.mp3','audio/2.mp3','audio/3.mp3','audio/5.mp3','audio/6.mp3','audio/7.mp3']; /*六首时空储蓄罐，整单循环*/; /*六首时空储蓄罐，整单循环*/
+const ALLTRACKS=['audio/1.mp3','audio/2.mp3','audio/3.mp3'];/*三首循环*/ /*六首时空储蓄罐，整单循环*/; /*六首时空储蓄罐，整单循环*/
 const playlist=ALLTRACKS.slice(); /*固定顺序，避免刷新换歌的串台感*/
 let trackIdx=0;
 const bgm=new Audio();
