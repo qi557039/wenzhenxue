@@ -1281,16 +1281,42 @@ function bgmRestore(){
   if(s.p){startMusic();const _m=document.getElementById('muc');_m&&_m.classList.remove('paused')}
 }
 bgm.src=playlist[0];
+/* iOS/微信兜底：某些小程序内核不派发 ended，强制单曲循环会被吞掉，这里让 <audio> 自己首尾相接 */
+bgm.loop=false;
+bgm.preload='auto';
+bgm.setAttribute('playsinline','');
 window.__bgm=bgm;window.__playlist=playlist;
 let _svT=0;
 bgm.addEventListener('timeupdate',()=>{const n=Date.now();if(n-_svT>2000){_svT=n;bgmSave()}});
 bgm.addEventListener('pause',bgmSave);
 bgm.addEventListener('play',()=>{bgmWant=true;bgmSave();if(!resumed)bgmRestore()});
-bgm.addEventListener('ended',()=>{
-  /* 超短曲目（如致爱丽丝片段）连播两遍再切下一首，避免频繁跳歌的串台感 */
-  if(bgm.duration&&bgm.duration<45&&bgm.dataset.rep!=='1'){bgm.dataset.rep='1';bgm.currentTime=0;bgm.play().catch(()=>{});return}
+/* —— 三首循环：ended 为主，timeupdate 兜底（部分移动端内核 ended 不触发或触发后 play 被拒） —— */
+let switching=false;
+function nextTrack(){
+  if(switching)return;switching=true;
+  trackIdx=(trackIdx+1)%playlist.length;
+  bgm.src=playlist[trackIdx];
   bgm.dataset.rep='0';
-  trackIdx=(trackIdx+1)%playlist.length;bgm.src=playlist[trackIdx];bgmSave();bgm.play().catch(()=>{})
+  bgmSave();
+  const p=bgm.play();
+  if(p&&p.catch)p.catch(()=>{ /* 被自动播放策略拦住：等用户下一次触控 */ });
+  setTimeout(()=>{switching=false},300);
+}
+bgm.addEventListener('ended',()=>{
+  /* 超短曲目连播两遍再切下一首，避免频繁跳歌的串台感 */
+  if(bgm.duration&&bgm.duration<45&&bgm.dataset.rep!=='1'){bgm.dataset.rep='1';bgm.currentTime=0;bgm.play().catch(()=>{});return}
+  nextTrack();
+});
+bgm.addEventListener('timeupdate',()=>{
+  const d=bgm.duration;
+  if(!d||!isFinite(d))return;
+  /* 接近结尾 0.35s 且仍在播放 → 主动切下一首，规避 ended 丢失 */
+  if(bgm.currentTime>=d-0.35&&!bgm.paused&&bgm.dataset.rep!=='1')nextTrack();
+});
+/* 播放卡死（loadstall/error）时自动重试当前曲目 */
+bgm.addEventListener('error',()=>{
+  if(!bgmWant)return;
+  setTimeout(()=>{try{bgm.load();bgm.play().catch(()=>{})}catch(e){}},600);
 });
 function startMusic(){
   bgm.play().catch(()=>{
