@@ -150,6 +150,8 @@ body.bwd .page.on{transform:none;filter:blur(0);transition:opacity .28s ease}
 #ntBody,#ntBody2{display:flex;flex-direction:column;gap:0;width:100%;margin-top:0}
 /* 须知两页：正文不再垂直居中，整体靠上 */
 #p3 .pbody,#p3b .pbody{justify-content:flex-start;margin-top:16px}
+/* 两页条目数相同（各 10 条）→ 行距按同一基准固定，翻页时上下位置完全一致 */
+#ntBody .ntrow,#ntBody2 .ntrow{min-height:42px;box-sizing:border-box}
 #p3 .rule-line,#p3b .rule-line{margin-bottom:2px}
 #p3 .title,#p3b .title{margin-top:18px}
 .ntrow{display:flex;align-items:center;gap:9px;padding:11px 2px;font-size:12px;line-height:1.55;letter-spacing:.04em;
@@ -166,6 +168,12 @@ body.bwd .page.on{transform:none;filter:blur(0);transition:opacity .28s ease}
 .ntrow .ntmark{flex:none;font-size:13px;line-height:1;color:#ffffff;
   transition:color .45s ease,text-shadow .45s ease}
 .ntrow .nttext{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;transition:color .45s ease}
+/* 序号：两位数、等宽、低调的半透明白 */
+.ntrow .ntidx{flex:none;min-width:17px;font-size:9.5px;line-height:1;letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;color:rgba(255,255,255,.42);
+  transform:translateY(-1px);transition:color .45s ease}
+.ntrow[data-on] .ntidx{color:rgba(255,255,255,.62)}
+.ntrow:not([data-on]) .ntidx{color:rgba(226,236,246,.22)}
 /* 默认（选中）：文案白色、雪花白色发光 */
 .ntrow[data-on] .ntmark{color:#ffffff;text-shadow:0 0 4px rgba(255,255,255,.9),0 0 10px rgba(160,215,255,.6)}
 .ntrow[data-on] .nttext{color:#ffffff}
@@ -790,7 +798,6 @@ body.modal-open #pager,body.modal-open #muc,body.modal-open #hint{
       <div class="ntrow" data-on="1"><span class="nttext">单内截图 录屏请提前告知我</span></div>
       <div class="ntrow" data-on="1"><span class="nttext">相互尊重才是爱人的前提</span></div>
       <div class="ntrow" data-on="1"><span class="nttext">约会期间如有不适 请说“阿闻 我想要一个拥抱”</span></div>
-      <div class="ntrow nt-blue" data-on="1"><span class="nttext">请在我们有冲突的地方告知于我 我会做出改变</span></div>
     </div>
   </section>
 
@@ -804,6 +811,7 @@ body.modal-open #pager,body.modal-open #muc,body.modal-open #hint{
     <div class="rule-line"></div>
     <div class="nt-sig">雪 · SNOW</div>
     <div class="pbody" id="ntBody2">
+      <div class="ntrow" data-on="1"><span class="nttext">请在我们有冲突的地方告知于我 我会做出改变</span></div>
       <div class="ntrow" data-on="1"><span class="nttext">我会及时调整状态并进行安抚</span></div>
       <div class="ntrow" data-on="1"><span class="nttext">个人原因 拒接男板 男板下单默认送</span></div>
       <div class="ntrow" data-on="1"><span class="nttext">仅接待生理与心理均为女性的老板</span></div>
@@ -1412,19 +1420,49 @@ bgm.addEventListener('pause',()=>muc.classList.add('paused'));
 
 /* ================= 须知页：长句自适应缩字，尽量不截断 ================= */
 function fitNotice(){
+  /* 必须在行可测量（display 非 none）时调用；首页/隐藏页 clientWidth 为 0，跳过 */
   document.querySelectorAll('#ntBody .nttext, #ntBody2 .nttext').forEach(t=>{
-    t.style.fontSize='';
+    if(!t.clientWidth)return;
+    t.style.fontSize='';t.style.letterSpacing='';t.style.whiteSpace='';t.style.overflow='';t.style.textOverflow='';t.style.lineHeight='';
     let size=12.5;
     t.style.fontSize=size+'px';
     let guard=0;
-    while(t.scrollWidth>t.clientWidth+1&&size>9.5&&guard<30){
-      size-=0.25;guard++;
+    /* 下限放宽到 7.5px：加了序号后单行可用宽度变窄，长句仍需完整显示不省略 */
+    while(t.scrollWidth>t.clientWidth&&size>7.5&&guard<40){
+      size-=0.2;guard++;
       t.style.fontSize=size+'px';
+    }
+    /* 极长句缩到最小仍差一点点：允许折行，保证一个字都不丢 */
+    if(t.scrollWidth>t.clientWidth){
+      t.style.fontSize='11px';
+      t.style.whiteSpace='normal';
+      t.style.overflow='visible';
+      t.style.textOverflow='clip';
+      t.style.lineHeight='1.35';
+      t.parentElement.style.alignItems='flex-start';
+    }else{
+      t.parentElement.style.alignItems='';
     }
   });
 }
 window.addEventListener('resize',fitNotice);
 setTimeout(fitNotice,300);
+/* ================= 须知页：编号（两页连续 01–21） ================= */
+(function numberingNotice(){
+  let n=0;
+  ['#ntBody','#ntBody2'].forEach(sel=>{
+    const box=document.querySelector(sel);
+    if(!box)return;
+    box.querySelectorAll('.ntrow').forEach(row=>{
+      n++;
+      row.querySelectorAll('.ntidx').forEach(el=>el.remove());
+      const s=document.createElement('span');
+      s.className='ntidx';
+      s.textContent=String(n).padStart(2,'0');
+      row.insertBefore(s,row.firstChild);
+    });
+  });
+})();
 /* ================= 须知页：点雪花切换 选中(白)/未选(灰) ================= */
 document.querySelectorAll('#ntBody .ntrow.tapable, #ntBody2 .ntrow.tapable').forEach(row=>{
   row.addEventListener('click',e=>{
@@ -1495,6 +1533,8 @@ function go(n){
   /* 只要翻到了内部页，就算真正「进入」过，此后允许出声 */
   if(n>0&&!allowAudio)markEntered();
   if(window.__imon)__imon.page();
+  /* 翻到须知页时重新量一次：隐藏状态下量不出宽度，必须进入后再自适应 */
+  if(n===3||n===4)setTimeout(fitNotice,420);
   pages[cur].classList.remove('on');pages[cur].classList.add('off');
   pages[n].classList.add('on');pages[n].classList.remove('off');
   pager.children[n].classList.add('on');pager.children[cur].classList.remove('on');
